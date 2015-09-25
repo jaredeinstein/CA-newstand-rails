@@ -1,28 +1,161 @@
-== README
+Newstand wants to add an authentication system to their news app.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+An authentication system is made up of three parts:
 
-Things you may want to cover:
+A signup page for new users to create accounts
+A login page, for returning users to sign back in to the site
+A log out functionality, which allows users to sign out
+Use the request/response cycle as a guide to add an authentication system.
+Tasks
+43/45Complete
+Mark each task as complete by checking them off
+Setup
+1.
+Install the gems in the Gemfile
+2.
+Run rake db:seed to seed the database with the data in db/seeds.rb.
+3.
+Start a Rails server to preview the app in the browser. In the terminal, type:
 
-* Ruby version
+$ rails server -p 8080
 
-* System dependencies
+This command starts a Rails server listening on port 8080.
+4.
+Then visit http://localhost:8080 to see your app in the browser. The app currently has two main page:
 
-* Configuration
+The home page displays a list of all articles
+When you click on an article, it shows that individual article
+We're going to add an authentication system to this app so that users need to be logged in to read individual articles.
+5.
+To get started, shut down the Rails server. In the terminal, press Ctrl+C. We'll restart the Rails server and preview the app later on after adding new functionality.
+6.
+Add the bcrypt gem to the Gemfile. Then run bundle install to install the gems specified in the Gemfile.
+Add a User model
+7.
+Generate a model named User to store users' names, emails, and passwords.
+8.
+Open the migration file in db/migrate for the users table, and add the following columns:
 
-* Database creation
+a string column called first_name
+a string column called last_name
+a string column called email
+a string column called password_digest
+9.
+Run the migration to update the database.
+10.
+Add has_secure_password to the User model. This will let us save a securely-hashed password to the database, and adds a few helper methods that we'll use later.
+Check the database
+11.
+Confirm that new users can be saved to the database by using the Rails console. The Rails console is a useful tool to interact with Rails apps. We'll use it here to query the database. In the terminal, open a new tab by clicking the 
+12.
+Start the Rails console.
+13.
+When you enter the Rails console, create a new user using the create method:
 
-* Database initialization
+> User.create(first_name: "Edna", last_name: "Mode", email: 'edna@example.com', password: 'incredibles')
 
-* How to run the test suite
+14.
+Find this user object using the find_by method, and save it into a variable named myuser. Here's an example of how to use the find_by method.
+15.
+Print out the myuser object's email attribute:
 
-* Services (job queues, cache servers, search engines, etc.)
+> myuser.email
 
-* Deployment instructions
+16.
+Print out the myuser object's password_digest attribute. This is the encrypted version of the password you used to create the user object above. This encrypted password is constructed using the bcrypt gem you installed earlier. Storing encrypted passwords instead of original passwords is more secure.
+17.
+Use the authenticate method with an incorrect password:
 
-* ...
+myuser.authenticate("wrong_pwd")
 
+The has_secure_password you added to the User model comes with a method named authenticate. When a user tries to log in again, Rails will use the authenticate method to determine whether the password entered is valid by first hashing it and then comparing it to the password_digest field in the database. Here, the wrong password should return false.
+18.
+Use authenticate with the password that you created the user object with. The correct password should return the user itself.
+19.
+Exit the Rails console by typing exit.
+Signup page
+20.
+An authentication system is made up of three parts - a signup page, a login page, and log out functionality. Let's start by creating the signup page.
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+Generate a controller named Users.
+21.
+In the routes file, map the GET request for the URL /signup to the Users controller's new action.
+22.
+In the routes file, also add the resource route for the Users controller.
+
+resources :users
+
+23.
+Run rake routes to view all the new URLs that are now available:
+
+We'll use users#new to handle GET requests and display the signup page
+We'll use users#create to handle POST requests and save a new user to the database
+24.
+First, in the Users controller, make an action named new to handle the GET requests. Inside the new action, create a new User object and save it into a variable named @user.
+25.
+In app/views/users/new.html.erb, use form_for to create a form with the fields of the @user object.
+26.
+View the result by starting a Rails development server and visiting http://localhost:8080/signup. The signup form should display.
+27.
+Second, in the Users controller, write a private method named user_params. Reqire the model name user and permit the column names first_name, last_name, email, and password.
+28.
+Third, in the Users controller, make an action named create to handle the POST requests. Use user_params to create a new User object. If user.save is successful, redirect to the root path /. Otherwise, redirect to the signup page.
+29.
+Restart the Rails server and view the changes by visiting http://localhost:8080/signup. Sign up as a new user and submit the form.
+
+To restart a Rails server, in the terminal, first press Ctrl+C to shut down the server. Then type rails server -p 8080 to start it again.
+30.
+Start the Rails console and find your newly-created user to check that it was saved to the database.
+Login page
+31.
+Next, create a log in page.
+
+Generate a controller named Sessions.
+32.
+In the routes file, create a route that maps GET requests for the URL /login to the Sessions controller's new action. We'll use this route to handle GET requests and display the login page.
+33.
+Then create another route that maps POST requests for the URL /login to the Sessions controller's create action. We'll use this route to handle POST requests and check whether the submitted username and password match the ones in the database.
+34.
+First, in the Sessions controller, make an empty action named new.
+35.
+In app/views/sessions/new.html.erb, create a form using form_for. Adapt your code from here.
+
+The difference between this login form and the signup form above is how we use form_for. In the signup form, we used form_for(@user) do |f| since we had a User model to refer to. For the login form, we don't have a Session model, so we instead use the name of the resource and the corresponding URL with form_for(:session, url: login_path) do |f|.
+36.
+Restart the Rails server and view the result by visiting http://localhost:8080/login.
+37.
+Second, in the Sessions controller, make an action named create to handle POST requests. Adapt your code from here.
+38.
+Restart the Rails server and view the result by visiting http://localhost:8080/login. Then, log in to your app with the credentials you used to sign up.
+Log out functionality
+39.
+In the Sessions controller, make an action named destroy. Adapt your code from here.
+40.
+In the routes file, map DELETE requests for the url /logout to the Sessions controller's destroy action.
+Require logged in users
+41.
+The signup, login, and logout functionalities are now complete. However, there's still a problem: anyone, even logged out users, can view individual articles. Let's make sure the app requires users to be logged in to read individual articles.
+
+To start, in the Application controller, set up the methods current_user, require_user, and helper_method. Adapt your code from here.
+42.
+In the Articles controller, use the before_action command to require users to be logged in for all actions except the index action. Check out this page for more information on before_action.
+43.
+In app/views/layouts/application.html.erb under line 20, use current_user to update the nav items depending on whether the user is logged in:
+
+If a user is logged in, show the user's email and a "Log out" link
+If a user is logged out, show a "Sign up" link and a "Log in" link
+Adapt your code from here.
+44.
+Restart the Rails server and visit http://localhost:8080.
+
+First log out of the app.
+Then visit http://localhost:8080/. You should be able to access it even though you're logged out.
+Next visit http://localhost:8080/articles/1. Since the articles show page requires users to be logged in, you should be redirected to the login page.
+Log in to the application. Now visit http://localhost:8080/articles/1. You should now be able to see it.
+Challenges
+45.
+There are a few more things that you can add to your authentication system to make it more complete:
+
+After a user is logged in, she shouldn't be able to see the signup page (http://localhost:8080/signup) or the login page (http://localhost:8080/login). Instead if she tries to visit either page, she should get redirected to the articles index page (http://localhost:8080/). Similar to how we required logged in users to view individual articles, require logged out users to view the signup and login pages.
+Add a profile page that shows the current user's first name, last name and email. Require that a user be logged in to access the profile page. Also, update the nav items to show a "Profile" link if a user is logged in.
+Let a logged in user modify her profile page. In other words, let the current user edit and update her first name, last name, and email through the profile page.
