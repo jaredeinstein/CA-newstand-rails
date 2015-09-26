@@ -16,5 +16,9 @@ class ApplicationController < ActionController::Base
   def already_login
     redirect_to root_path if current_user
   end
+  
+  def current_user?(user)
+    user == current_user
+  end
       
 end

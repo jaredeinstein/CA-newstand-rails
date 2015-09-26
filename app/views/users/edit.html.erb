@@ -1,0 +1,15 @@
+<div class="editProfile">
+  <div class="container">
+    
+    <%= form_for(@user) do |f| %>
+      <%= f.text_field :first_name %>
+      <%= f.text_field :last_name %>
+      <%= f.email_field :email %>
+      <%= f.password_field :password %>
+    <%= f.submit "Update account"%>
+    <div class="btn cancel"><%= link_to "Cancel", profile_path%></div>
+    <% end %>
+
+
+  </div>
+</div>

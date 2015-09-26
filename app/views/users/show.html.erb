@@ -2,5 +2,7 @@
   <div class="container">
     <h2><%= current_user.first_name + " " + current_user.last_name %></h2>
     <p class="email"><%= current_user.email %></p>
+    <br><br>
+    <div class="btn"><%= link_to "edit info", edit_user_path(current_user), class: "editInfo" %></div>
   </div>
 </div>
