@@ -145,7 +145,7 @@ body {
 }
 
 /*      FORMS     */
-.login .container, .signup .container, .update-article .container {
+.login .container, .signup .container, .update-article .container, .profile .container {
   width: 600px;
   margin: 0 50px 50px;
 }
@@ -209,7 +209,7 @@ form textarea {
   }
 
   /*    ARTICLES    */
-  .article, .login .container, .signup .container, .update-article .container {
+  .article, .login .container, .signup .container, .update-article .container, .profile .container {
     margin: 0 30px 50px;
     width: 340px;
   }

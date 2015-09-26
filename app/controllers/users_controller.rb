@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
   before_action :already_login, only: [:new]
+  before_action :require_user, only: :show
+  
   
   def new
     @user = User.new
@@ -15,7 +17,6 @@ class UsersController < ApplicationController
   end
   
   def show
-    @user = User.find(params[:id])
   end
   
   private

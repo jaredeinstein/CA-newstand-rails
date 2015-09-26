@@ -18,7 +18,7 @@
         <div class="nav">
           <% if current_user %> 
   <ul> 
-    <li><%= link_to current_user.email, user_path(id: current_user.id) %></li> 
+    <li><%= link_to current_user.email, profile_path %></li> 
     <li><%= link_to "log out", logout_path, method: "delete" %></li> 
   </ul> 
 <% else %> 
