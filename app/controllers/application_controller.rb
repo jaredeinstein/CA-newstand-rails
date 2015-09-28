@@ -17,8 +17,19 @@ class ApplicationController < ActionController::Base
     redirect_to root_path if current_user
   end
   
-  def current_user?(user)
-    user == current_user
+  def require_author
+    redirect_to root_path unless current_user.author?
+  end
+  
+  # Confirms the correct user.
+  def correct_user
+#    begin
+#      @user = User.find(params[:id])
+#    rescue ActiveRecord::RecordNotFound => e
+#      @user = nil
+#    end
+#    redirect_to(edit_user_path(current_user)) unless current_user.current_user?(@user)
+    redirect_to(edit_user_path(current_user)) unless current_user[:id].to_s == params[:id]
   end
       
 end

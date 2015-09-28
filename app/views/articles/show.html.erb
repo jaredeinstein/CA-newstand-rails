@@ -6,7 +6,11 @@
     <p class="article_content"><%= @article.body %></p>
 
     <!-- Your code here -->
-
-    
+    <% if current_user && current_user.author? %>
+    <div class=btn>
+      <%= link_to "edit", edit_article_path %>
+      <%= link_to "delete", article_path, method: :delete, data: { confirm: "Are you sure?" } %>
+    </div>
+    <% end %>
   </div>
 </div>
