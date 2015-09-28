@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :already_login, only: [:new]
-  before_action :require_user, only: [:show, :edit]
+  before_action :require_login, only: [:show, :edit, :update]
+  before_action :require_logout, only: [:new]
   before_action :correct_user,   only: [:edit, :update]
   
   

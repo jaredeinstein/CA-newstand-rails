@@ -9,11 +9,11 @@ class ApplicationController < ActionController::Base
   	@current_user ||= User.find(session[:user_id]) if session[:user_id] 
 	end
   
-  def require_user 
+  def require_login 
   	redirect_to login_path unless current_user 
 	end
   
-  def already_login
+  def require_logout
     redirect_to root_path if current_user
   end
   
