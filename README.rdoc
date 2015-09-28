@@ -159,3 +159,50 @@ There are a few more things that you can add to your authentication system to ma
 After a user is logged in, she shouldn't be able to see the signup page (http://localhost:8080/signup) or the login page (http://localhost:8080/login). Instead if she tries to visit either page, she should get redirected to the articles index page (http://localhost:8080/). Similar to how we required logged in users to view individual articles, require logged out users to view the signup and login pages.
 Add a profile page that shows the current user's first name, last name and email. Require that a user be logged in to access the profile page. Also, update the nav items to show a "Profile" link if a user is logged in.
 Let a logged in user modify her profile page. In other words, let the current user edit and update her first name, last name, and email through the profile page.
+
+
+Newstand wants to add an authorization system to their news app where users who have an "author" role can edit and delete articles in their news app.
+
+Using the request/response cycle as a guide, there are 10 changes to be made.
+Mark each task as complete by checking them off
+1.
+Continue building the Newstand project, which you started here. Start a Rails server to preview the app in the browser. In the terminal, type:
+
+$ rails server -p 8080
+
+This command starts a Rails server listening on port 8080.
+2.
+To create an authorization system based on roles, let's start by adding a "role" column to the users table. The users table already exists in the database, so modify it using this command:
+
+$ rails generate migration AddRoleToUsers role:string
+
+This command generates a new migration file in db/migrate/. The name of the migration file starts with the timestamp of when it was created, followed by add_role_to_users.rb. Open this migration file in db/migrate to see what it looks like. The migration file has a statement to add a new string column named role to the users table.
+
+Check out this page for more information on modifying a table by creating a standalone migration.
+3.
+Run the migration to update the users table with the new "role" column.
+4.
+Enter the Rails console, and create a new user with the role of "author" using the create method.
+
+Check out this page for an example of how to use the create command.
+5.
+In the User model, add a method named author? that determines whether a user as an author role on the site.
+6.
+Close and re-enter the Rails console, and confirm that you can use the author? method to check whether a user has an author role. Find the new user you added in db/seeds.rb and use author? to check whether that user has an author role.
+7.
+In the Application controller, add a method named require_author.
+8.
+In the Articles controller, create a before action that calls the require_author method before running the edit, update, or destroy actions.
+9.
+In app/views/articles/show.html.erb, use author? to display an "Edit" link and a "Delete" link only if a user is an author.
+10.
+Start a Rails server to preview the app in the browser. In the terminal, type:
+
+$ rails s -p 8080
+
+This command starts a Rails server listening on port 8080.
+11.
+Then visit http://localhost:8080 to see your app in the browser. To make sure the authorization system is working:
+
+Log in as a user who isn't an author, and visit http://localhost:3005/articles/1. The "Edit" and "Delete" links shouldn't be visibile.
+Log in as a user who is an author, and visit http://localhost:3005/articles/1. Now the "Edit" and "Delete" links should be visible.
